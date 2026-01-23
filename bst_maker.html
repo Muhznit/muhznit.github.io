@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<style>
+input {
+  display: block;
+  width: 100%;
+}
+body {
+  max-width:650px;
+  margin:40px auto;
+  padding:0 10px;
+  font:18px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  color:#444
+}
+h1,h2,h3 {
+  line-height:1.2
+}
+@media (prefers-color-scheme: dark) {
+  body{
+    color:#c9d1d9;
+    background:#0d1117
+  }
+  a:link{
+    color:#58a6ff
+  }
+  a:visited{
+    color:#8e96f0
+  }
+}
+</style>
+<script>
+  function calc_normalized_stats() {
+    const target = parseInt(document.getElementById("target_bst").value) || 0;
+    const hp = parseInt(document.getElementById("base_hp").value) || 0;
+    const at = parseInt(document.getElementById("base_at").value) || 0;
+    const df = parseInt(document.getElementById("base_df").value) || 0;
+    const sa = parseInt(document.getElementById("base_sa").value) || 0;
+    const sd = parseInt(document.getElementById("base_sd").value) || 0;
+    const sp = parseInt(document.getElementById("base_sp").value) || 0;
+    const input_total = hp + at + df + sa + sd + sp;
+    return {
+      hp: hp / input_total * target,
+      at: at / input_total * target,
+      df: df / input_total * target,
+      sa: sa / input_total * target,
+      sd: sd / input_total * target,
+      sp: sp / input_total * target
+    }
+  };
+  function updateView() {
+    norm_stats = calc_normalized_stats();
+    s = "<table><tr>";
+    for (var key in norm_stats) {
+      s += "<td>";
+      s += norm_stats[key].toFixed(0);
+      if (key != "sp")
+        s += "</td>";
+    }
+    s += "</tr></table>"
+    return s;
+  }
+</script>
+<body>
+  <h1>Muhz's quick-and-dirty base stat generator</h1>
+  <div>
+    A quick-and-dirty tool designed for <a href="https://www.twitch.tv/alpharad">Alpharad</a> to help assign stats for his "Let's Make a Pokemon Game" project.<br>
+    As you change the sliders, the "normalized base stats" will be recalculated and adjust to get as close as possible to the Target Base Stat Total.
+  </div>
+  <div>
+    <form oninput="result.innerHTML = updateView();">
+      <label for="target_bst">Approximate Target Base Stat Total</label>
+      <input id="target_bst" type="text" name="target_bst" value="600" min="6">
+      <label for="base_hp">HP</label>
+      <input id="base_hp" type="range" name="base_hp" value="1" min="1" max="100">
+      <label for="base_at">Atk</label>
+      <input id="base_at" type="range" name="base_at" value="1" min="1" max="100">
+      <label for="base_df">Def</label>
+      <input id="base_df" type="range" name="base_df" value="1" min="1" max="100">
+      <label for="base_sa">Sp. Atk</label>
+      <input id="base_sa" type="range" name="base_sa" value="1" min="1" max="100">
+      <label for="base_sd">Sp. Def</label>
+      <input id="base_sd" type="range" name="base_sd" value="1" min="1" max="100">
+      <label for="base_sp">Speed</label>
+      <input id="base_sp" type="range" name="base_sp" value="1" min="1" max="100">
+      <label for="result">Normalized Base Stats:</label></td>
+      <output name="result" for="hp at df sa sd sp" value=""></output>
+    </form>
+  </div>
+</body>
+</html>
